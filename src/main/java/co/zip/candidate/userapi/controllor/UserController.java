@@ -4,9 +4,10 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+import co.zip.candidate.userapi.dto.UserDTO;
 import co.zip.candidate.userapi.exception.UserNotFoundException;
 import co.zip.candidate.userapi.model.User;
-import co.zip.candidate.userapi.repo.UserRepository;
+import co.zip.candidate.userapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,30 +17,27 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @GetMapping("/users")
-    public List<User> retrieveAllStudents() {
-        return userRepository.findAll();
+    public List<UserDTO> retrieveAllUsers() {
+        return userService.getUsers();
     }
     @GetMapping("/users/{id}")
-    public User retrieveUser(@PathVariable long id) {
-        Optional<User> User = userRepository.findById(id);
+    public UserDTO retrieveUser(@PathVariable long id) {
+        UserDTO user = userService.getUser(id);
 
-        if (User.isEmpty())
-            throw new UserNotFoundException("id-" + id);
-
-        return User.get();
+        return user;
     }
 
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable long id) {
-        userRepository.deleteById(id);
+        userService.deleteUser(id);
     }
 
     @PostMapping("/users")
-    public ResponseEntity<Object> createUser(@RequestBody User User) {
-        User savedUser = userRepository.save(User);
+    public ResponseEntity<Object> createUser(@RequestBody UserDTO User) {
+        User savedUser = userService.createUser(User);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(savedUser.getId()).toUri();
@@ -49,16 +47,9 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<Object> updateUser(@RequestBody User user, @PathVariable long id) {
-
-        Optional<User> UserOptional = userRepository.findById(id);
-
-        if (UserOptional.isEmpty())
-            return ResponseEntity.notFound().build();
-
+    public ResponseEntity<Object> updateUser(@RequestBody UserDTO user, @PathVariable long id) {
         user.setId(id);
-
-        userRepository.save(user);
+         userService.updateUser(user);
 
         return ResponseEntity.noContent().build();
     }
