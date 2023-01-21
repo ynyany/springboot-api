@@ -1,6 +1,8 @@
 package co.zip.candidate.userapi.service;
 
+import co.zip.candidate.userapi.dto.UpdateUserDTO;
 import co.zip.candidate.userapi.dto.UserDTO;
+import co.zip.candidate.userapi.exception.UserEmailAlreadyExistsException;
 import co.zip.candidate.userapi.exception.UserNotFoundException;
 import co.zip.candidate.userapi.model.User;
 import co.zip.candidate.userapi.repo.UserRepository;
@@ -40,6 +42,10 @@ public class UserService {
 
     public User createUser(UserDTO userDTO) {
         User user = toDomainModel(userDTO);
+        List<User> usersWithSameEmail = userRepository.findByEmail(user.getEmail());
+        if(!usersWithSameEmail.isEmpty()) {
+            throw new UserEmailAlreadyExistsException("Duplicated email address");
+        }
         User savedUser = userRepository.save(user);
         return savedUser;
     }
@@ -50,21 +56,19 @@ public class UserService {
         User user = new User(userDTO.getName(), userDTO.getEmail(), userDTO.getMonthlySalary(), userDTO.getMonthlyExpenses());
         user.setId(userDTO.getId());
         return user;
-
-
     }
 
     @Transactional
-    public void updateUser(UserDTO userDTO) {
-
-        User user = toDomainModel(userDTO);
-        Optional<User> UserOptional = userRepository.findById(user.getId());
+    public void updateUser(UpdateUserDTO userDTO) {
 
 
-        if (UserOptional.isEmpty()) {
-            throw new UserNotFoundException("User id " + user.getId());
+        Optional<User> userOptional = userRepository.findById(userDTO.getId());
+
+        if (userOptional.isEmpty()) {
+            throw new UserNotFoundException("User id " + userDTO.getId());
         }
 
+        User user = userOptional.get();
         user.setName(userDTO.getName());
         user.setMonthlySalary(userDTO.getMonthlySalary());
         user.setMonthlyExpenses(userDTO.getMonthlyExpenses());

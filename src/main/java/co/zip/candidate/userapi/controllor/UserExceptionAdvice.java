@@ -1,5 +1,6 @@
 package co.zip.candidate.userapi.controllor;
 
+import co.zip.candidate.userapi.exception.UserEmailAlreadyExistsException;
 import co.zip.candidate.userapi.exception.UserIncomeNotQualitiedException;
 import co.zip.candidate.userapi.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -25,4 +26,10 @@ public class UserExceptionAdvice {
         return ex.getMessage();
     }
 
+    @ResponseBody
+    @ExceptionHandler(UserEmailAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    String DuplicatedEmail(UserEmailAlreadyExistsException ex) {
+        return ex.getMessage();
+    }
 }
