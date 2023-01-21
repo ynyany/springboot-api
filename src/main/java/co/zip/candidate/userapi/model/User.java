@@ -4,6 +4,7 @@ package co.zip.candidate.userapi.model;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -19,6 +20,9 @@ public class User {
 
     private BigDecimal monthlySalary;
     private BigDecimal monthlyExpenses;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    Set<Account> accounts;
     protected User() {}
 
     public User(String name, String email, BigDecimal monthlySalary, BigDecimal monthlyExpenses) {
@@ -73,5 +77,13 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public Set<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(Set<Account> accounts) {
+        this.accounts = accounts;
     }
 }

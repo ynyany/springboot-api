@@ -1,5 +1,6 @@
 package co.zip.candidate.userapi.controllor;
 
+import co.zip.candidate.userapi.dto.AccountDTO;
 import co.zip.candidate.userapi.dto.UpdateUserDTO;
 import co.zip.candidate.userapi.dto.UserDTO;
 import co.zip.candidate.userapi.model.User;
@@ -53,5 +54,20 @@ public class UserController {
         userService.updateUser(user);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/users/{id}/accounts/")
+    public ResponseEntity<Object> associatedAccount(@Valid @RequestBody AccountDTO accountDTO, @PathVariable long id) {
+
+        userService.createAccount(id, accountDTO);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/users/{userId}/accounts/")
+    public List<AccountDTO> getAssociatedAccounts(@PathVariable long userId) {
+
+       return  userService.getAccounts(userId);
+
     }
 }
