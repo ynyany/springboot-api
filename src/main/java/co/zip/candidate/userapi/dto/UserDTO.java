@@ -1,13 +1,28 @@
 package co.zip.candidate.userapi.dto;
 
+import jakarta.validation.constraints.*;
+
 import java.math.BigDecimal;
 
 public class UserDTO {
     private Long id;
+
+    @NotEmpty
+    @Size(min = 2, message = "user name should have at least 2 characters")
     private String name;
+
+    @NotEmpty
+    @Email
     private String email;
 
+
+    @DecimalMin(value = "1000.0", inclusive = false, message = "we can not take monthlySalary that lower than 1000")
+    @DecimalMax(value = "100000.0", message = "we can not take monthlySalary that exceeds 100000.0")
+    @Digits(integer=6, fraction=2)
     private BigDecimal monthlySalary;
+    @DecimalMin(value = "100.0", inclusive = false,  message = "we can not take monthlyExpenses that lower than 100")
+    @DecimalMax(value = "100000.0", message = "we can not take monthlyExpenses that exceeds 100000.0")
+    @Digits(integer=6, fraction=2)
     private BigDecimal monthlyExpenses;
 
     public UserDTO(Long id, String name, String email, BigDecimal monthlySalary, BigDecimal monthlyExpenses) {

@@ -8,6 +8,7 @@ import co.zip.candidate.userapi.dto.UserDTO;
 import co.zip.candidate.userapi.exception.UserNotFoundException;
 import co.zip.candidate.userapi.model.User;
 import co.zip.candidate.userapi.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<Object> createUser(@RequestBody UserDTO User) {
+    public ResponseEntity<Object> createUser(@Valid @RequestBody UserDTO User) {
         User savedUser = userService.createUser(User);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -47,7 +48,7 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<Object> updateUser(@RequestBody UserDTO user, @PathVariable long id) {
+    public ResponseEntity<Object> updateUser(@Valid @RequestBody UserDTO user, @PathVariable long id) {
         user.setId(id);
          userService.updateUser(user);
 

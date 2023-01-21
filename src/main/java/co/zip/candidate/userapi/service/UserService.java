@@ -4,22 +4,25 @@ import co.zip.candidate.userapi.dto.UserDTO;
 import co.zip.candidate.userapi.exception.UserNotFoundException;
 import co.zip.candidate.userapi.model.User;
 import co.zip.candidate.userapi.repo.UserRepository;
+import co.zip.candidate.userapi.validator.SimpleIncomeValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Component
+@Service
 public class UserService {
 
     @Autowired
+    private SimpleIncomeValidator validator;
+    @Autowired
     private UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(SimpleIncomeValidator validator, UserRepository userRepository) {
+        this.validator = validator;
         this.userRepository = userRepository;
     }
 
@@ -42,7 +45,8 @@ public class UserService {
     }
 
     private User toDomainModel(UserDTO userDTO) {
-//        validdate dto;
+
+        validator.validExpendableInCome(userDTO);
         User user = new User(userDTO.getName(), userDTO.getEmail(), userDTO.getMonthlySalary(), userDTO.getMonthlyExpenses());
         user.setId(userDTO.getId());
         return user;
@@ -52,6 +56,7 @@ public class UserService {
 
     @Transactional
     public void updateUser(UserDTO userDTO) {
+
         User user = toDomainModel(userDTO);
         Optional<User> UserOptional = userRepository.findById(user.getId());
 
@@ -59,9 +64,7 @@ public class UserService {
         if (UserOptional.isEmpty()) {
             throw new UserNotFoundException("User id " + user.getId());
         }
-//            return ResponseEntity.notFound().build();
 
-//        user.setEmail(userDTO.getEmail());
         user.setName(userDTO.getName());
         user.setMonthlySalary(userDTO.getMonthlySalary());
         user.setMonthlyExpenses(userDTO.getMonthlyExpenses());
