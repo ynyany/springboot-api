@@ -72,6 +72,7 @@ public class UserService {
 
 
         Long userId = userDTO.getId();
+        validator.validExpendableInCome(userDTO);
         User user = getUserById(userId);
         user.setName(userDTO.getName());
         user.setMonthlySalary(userDTO.getMonthlySalary());

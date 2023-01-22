@@ -1,5 +1,6 @@
 package co.zip.candidate.userapi.validator;
 
+import co.zip.candidate.userapi.dto.UpdateUserDTO;
 import co.zip.candidate.userapi.dto.UserDTO;
 import co.zip.candidate.userapi.exception.UserAccountAssociationExceededException;
 import co.zip.candidate.userapi.exception.UserIncomeNotQualitiedException;
@@ -32,6 +33,12 @@ public class SimpleIncomeValidator {
     public void validAccountAssociation(User user) {
         if (user.getAccounts().size() > this.maxNubmerAccountAssociation)
             throw new UserAccountAssociationExceededException("User max accounts association reached");
+    }
+
+    public void validExpendableInCome(UpdateUserDTO userDTO) {
+        if (userDTO.getMonthlySalary().subtract(userDTO.getMonthlyExpenses()).compareTo(this.minExpendableIncome) <= 0) {
+            throw new UserIncomeNotQualitiedException("Monthly expendable income is less that min required");
+        }
     }
 }
 
