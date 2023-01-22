@@ -17,3 +17,8 @@ configuration
 |---------------|------------------------------------------------------|
 | user-api.minExpendableIncome        | minium expendable income = monthly salary - expendse |
 | user-api.maxNubmerAccountAssociation     | max account association number                       |
+
+
+## API collection for postman
+load the following collection into Postman for testing
+zip.postman_collection.json
