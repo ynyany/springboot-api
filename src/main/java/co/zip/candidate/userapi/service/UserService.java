@@ -90,11 +90,11 @@ public class UserService {
     @Transactional
     public AccountDTO createAccount(long userId, AccountDTO accountDTO) {
         User user = getUserById(userId);
-        this.validator.validAccountAssociation(user);
         Account newAccount = new Account(accountDTO.getName(), user);
         Account savedAccount = accountRepository.save(newAccount);
         user.getAccounts().add(savedAccount);
         accountDTO.setId(savedAccount.getId());
+        this.validator.validAccountAssociation(user);
         return accountDTO;
     }
 
