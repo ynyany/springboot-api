@@ -3,7 +3,6 @@ package co.zip.candidate.userapi.controllor;
 import co.zip.candidate.userapi.dto.AccountDTO;
 import co.zip.candidate.userapi.dto.UpdateUserDTO;
 import co.zip.candidate.userapi.dto.UserDTO;
-import co.zip.candidate.userapi.model.User;
 import co.zip.candidate.userapi.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,9 +50,9 @@ public class UserController {
     @PutMapping("/users/{id}")
     public ResponseEntity<Object> updateUser(@Valid @RequestBody UpdateUserDTO user, @PathVariable long id) {
         user.setId(id);
-        userService.updateUser(user);
+        UpdateUserDTO updateUserDTO = userService.updateUser(user);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.accepted().body(updateUserDTO);
     }
 
     @PostMapping("/users/{id}/accounts")
@@ -68,7 +67,7 @@ public class UserController {
     @GetMapping("/users/{userId}/accounts/")
     public List<AccountDTO> getAssociatedAccounts(@PathVariable long userId) {
 
-       return  userService.getAccounts(userId);
+        return userService.getAccounts(userId);
 
     }
 }

@@ -1,6 +1,7 @@
 package co.zip.candidate.userapi.dto;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 
 public class AccountDTO {

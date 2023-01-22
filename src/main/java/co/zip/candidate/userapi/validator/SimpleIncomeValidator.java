@@ -11,14 +11,17 @@ import java.math.BigDecimal;
 
 @Component
 public class SimpleIncomeValidator {
-    @Value("${user-api.minExpendableIncome}")
+
     private BigDecimal minExpendableIncome;
 
-    @Value("${user-api.maxNubmerAccountAssociation}")
+
     private int maxNubmerAccountAssociation;
 
-    public SimpleIncomeValidator() {
+    public SimpleIncomeValidator(@Value("${user-api.minExpendableIncome}") BigDecimal minExpendableIncome, @Value("${user-api.maxNubmerAccountAssociation}") int maxNubmerAccountAssociation) {
+        this.minExpendableIncome = minExpendableIncome;
+        this.maxNubmerAccountAssociation = maxNubmerAccountAssociation;
     }
+
 
     public void validExpendableInCome(UserDTO userDTO) {
         if (userDTO.getMonthlySalary().subtract(userDTO.getMonthlyExpenses()).compareTo(this.minExpendableIncome) <= 0) {

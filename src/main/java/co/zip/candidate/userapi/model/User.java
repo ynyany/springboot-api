@@ -10,12 +10,12 @@ import java.util.Set;
 public class User {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
 
 
-    @Column(unique=true)
+    @Column(unique = true)
     private String email;
 
     private BigDecimal monthlySalary;
@@ -23,7 +23,9 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL)
     Set<Account> accounts;
-    protected User() {}
+
+    protected User() {
+    }
 
     public User(String name, String email, BigDecimal monthlySalary, BigDecimal monthlyExpenses) {
         this.name = name;

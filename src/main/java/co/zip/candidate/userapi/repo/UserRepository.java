@@ -9,7 +9,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import java.util.List;
 
 @RepositoryRestResource(collectionResourceRel = "user", path = "user")
-public interface UserRepository extends PagingAndSortingRepository<User, Long>, JpaRepository<User,Long> {
+public interface UserRepository extends PagingAndSortingRepository<User, Long>, JpaRepository<User, Long> {
 
     List<User> findByEmail(@Param("email") String email);
 }

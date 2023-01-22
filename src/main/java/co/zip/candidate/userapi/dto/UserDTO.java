@@ -18,11 +18,11 @@ public class UserDTO {
 
     @DecimalMin(value = "1000.0", inclusive = false, message = "we can not take monthlySalary that lower than 1000")
     @DecimalMax(value = "100000.0", message = "we can not take monthlySalary that exceeds 100000.0")
-    @Digits(integer=6, fraction=2)
+    @Digits(integer = 6, fraction = 2)
     private BigDecimal monthlySalary;
-    @DecimalMin(value = "100.0", inclusive = false,  message = "we can not take monthlyExpenses that lower than 100")
+    @DecimalMin(value = "100.0", inclusive = false, message = "we can not take monthlyExpenses that lower than 100")
     @DecimalMax(value = "100000.0", message = "we can not take monthlyExpenses that exceeds 100000.0")
-    @Digits(integer=6, fraction=2)
+    @Digits(integer = 6, fraction = 2)
     private BigDecimal monthlyExpenses;
 
     public UserDTO(Long id, String name, String email, BigDecimal monthlySalary, BigDecimal monthlyExpenses) {
