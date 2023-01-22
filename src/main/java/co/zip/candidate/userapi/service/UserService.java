@@ -48,14 +48,15 @@ public class UserService {
         return user.map(u -> new UserDTO(u.getId(), u.getName(), u.getEmail(), u.getMonthlySalary(), u.getMonthlyExpenses())).get();
     }
 
-    public User createUser(UserDTO userDTO) {
+    public UserDTO createUser(UserDTO userDTO) {
         User user = toDomainModel(userDTO);
         List<User> usersWithSameEmail = userRepository.findByEmail(user.getEmail());
         if (!usersWithSameEmail.isEmpty()) {
             throw new UserEmailAlreadyExistsException("Duplicated email address");
         }
         User savedUser = userRepository.save(user);
-        return savedUser;
+        userDTO.setId(savedUser.getId());
+        return userDTO;
     }
 
     private User toDomainModel(UserDTO userDTO) {
@@ -67,7 +68,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(UpdateUserDTO userDTO) {
+    public UpdateUserDTO updateUser(UpdateUserDTO userDTO) {
 
 
         Long userId = userDTO.getId();
@@ -78,6 +79,7 @@ public class UserService {
 
         userRepository.save(user);
 
+        return userDTO;
     }
 
 
@@ -86,13 +88,14 @@ public class UserService {
     }
 
     @Transactional
-    public void createAccount(long userId, AccountDTO accountDTO) {
+    public AccountDTO createAccount(long userId, AccountDTO accountDTO) {
         User user = getUserById(userId);
         this.validator.validAccountAssociation(user);
         Account newAccount = new Account(accountDTO.getName(), user);
         Account savedAccount = accountRepository.save(newAccount);
         user.getAccounts().add(savedAccount);
-
+        accountDTO.setId(savedAccount.getId());
+        return accountDTO;
     }
 
     private User getUserById(Long userId) {

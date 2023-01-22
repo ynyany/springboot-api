@@ -16,6 +16,10 @@ public class AccountDTO {
         this.name = name;
     }
 
+    public AccountDTO(String name) {
+        this.name = name;
+    }
+
     public AccountDTO() {
     }
 

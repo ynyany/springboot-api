@@ -38,14 +38,14 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<Object> createUser(@Valid @RequestBody UserDTO User) {
-        User savedUser = userService.createUser(User);
+    public ResponseEntity<Object> createUser(@Valid @RequestBody UserDTO userDTO) {
+        UserDTO savedUser = userService.createUser(userDTO);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(savedUser.getId()).toUri();
 
-        return ResponseEntity.created(location).build();
-
+        UserDTO responseDTO = new UserDTO(savedUser.getId(), savedUser.getName(), savedUser.getEmail(), savedUser.getMonthlySalary(), savedUser.getMonthlyExpenses());
+        return ResponseEntity.created(location).body(responseDTO);
     }
 
     @PutMapping("/users/{id}")
@@ -56,12 +56,13 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/users/{id}/accounts/")
+    @PostMapping("/users/{id}/accounts")
     public ResponseEntity<Object> associatedAccount(@Valid @RequestBody AccountDTO accountDTO, @PathVariable long id) {
 
-        userService.createAccount(id, accountDTO);
-
-        return ResponseEntity.noContent().build();
+        AccountDTO account = userService.createAccount(id, accountDTO);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{accountId}")
+                .buildAndExpand(account.getId()).toUri();
+        return ResponseEntity.created(location).body(account);
     }
 
     @GetMapping("/users/{userId}/accounts/")
